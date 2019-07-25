@@ -1,0 +1,15 @@
+https://github.com/lupoDharkael/flameshot
+
+←, ↓, ↑, →	Move selection 1px
+Shift + ←, ↓, ↑, →	Resize selection 1px
+Ctrl + C	Copy to clipboard
+Ctrl + S	Save selection as a file
+Spacebar	Toggle visibility of sidebar with options of the selected tool
+Right Click	Show color picker
+Mouse Wheel	Change the tool's thickness
+Shift + drag a handler of the selection area: mirror redimension in the opposite handler.
+
+Prt Sc	Start the Flameshot screenshot tool and take a screenshot
+Ctrl + Prt Sc	Wait for 3 seconds, then start the Flameshot screenshot tool and take a screenshot
+Shift + Prt Sc	Take a full-screen (all monitors) screenshot and save it
+Ctrl + Shift + Prt Sc	Take a full-screen (all monitors) screenshot and copy it to the clipboard

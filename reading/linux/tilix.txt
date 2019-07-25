@@ -1,0 +1,19 @@
+Tilix
+
+Shift + Ctrl + T: New Session
+F11: Fullscreen
+F12: Session sidebar
+Ctrl + Page Down: Next session
+Ctrl + Alt + 1: Switch to session 1
+
+Badges
+Command Line Actions
+Custom Hyperlinks
+Margin
+  > Ctrl + ALT + M
+Automatic Profile Switching
+Quake
+  > tilix --quake
+Themes
+Titles
+Triggers

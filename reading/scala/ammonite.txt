@@ -1,0 +1,185 @@
+#Ammonite-REPL
+If you want some initialization code available to the REPL, you can add it to your ~/.ammonite/predef.sc.
+
+@ show(Seq.fill(20)(100), height = 3)
+@ repl.pprinter() = repl.pprinter().copy(defaultHeight = 5)
+{}
+// un-wrapping behavior
+{{}}
+
+Magic Imports
+// MyScript.sc
+val elite = 31337
+@ import $file.MyScript
+@ MyScript.elite
+res1: Int = 31337
+@ import $file.myfolder.MyScript
+@ import $file.^.MyScript
+@ import $file.MyScript, MyScript._
+Note you can also perform file imports from your predef file, which are resolved relative to that file's path.
+
+Imported Scripts are Re-used
+If you want to re-load a script, you should use Ammonite's Save/Load Session functionality to sess.save() the session before importing the script, and sess.load()ing to reset the script before re-importing it.
+Cannot directly import from inside a Script
+x @ import $file.MyScript._
+Renamed-scripts and multiple-scripts
+@ import $file.{MyScript => FooBarScript}, FooBarScript._
+@ import $file.{MyScript, MyOtherScript}
+These behave as you would expect imports to work. Note that when importing multiple scripts, you have to name them explicitly and cannot use wildcard `._` imports.
+
+import $exec
+This is similar to import $file, except that it dumps the definitions and imports from the script into your REPL session.
+
+@ import $ivy.`org.scalaz::scalaz-core:7.2.7`, scalaz._, Scalaz._
+@ import $ivy.`com.google.guava:guava:18.0`, com.google.common.collect._
+As well as the org:::library:version syntax for loading Scala libraries cross-published against the full Scala version (e.g. 2.12.2 rather than just 2.12):
+@ import $plugin.$ivy.`org.spire-math::kind-projector:0.6.3`
+// see more advanced/useless dependencies/repositories usages on documentation
+
+Builtins
+repl: the object representing the Repl API.
+disable some default import by pass in defaultPredef = false to the REPL's Main API or --no-default-predef to the REPL from the command-line.
+typeOf, repl.history, repl.width, repl.frontEnd()
+interp object
+// see more https://ammonite.io/#Builtins
+
+source
+A method call foo.bar(...), in which case it will try to bring you to concrete implementation of that method bar. You can also leave the method arguments empty using `_`.
+An arbitrary expression foo, in which case it will try to bring you to the implementation of foo's runtime class
+source(Some(1).map _)
+source(Some(1))
+
+source(..., _ => "vim")
+source(..., _ => Seq("vim", "--flag"))
+
+time(ls!)
+
+grep
+ls! wd || grep! "re" (highlighted)
+ls! wd |? grep! "re"
+ls! wd || grep! "re[a-z]+".r
+any collection of objects can be piped through grep!
+(sys.props :scala.sys.SystemProperties) || grep! "os|OS".r
+(typeOf(repl.compiler).members :reflect.runtime.universe.MemberScope)|| grep! "Raw"
+
+ls.rec!
+browse(ls.rec! wd, viewer="emacs")(pprint.PPrinter.BlackWhite)
+
+desugar{}
+
+Save/Load Session
+@ repl.sess.save()
+@ repl.sess.load()
+@ repl.sess.save("xy initialized")
+@ repl.sess.load("xy initialized")
+@ repl.sess.pop() // same to load
+@ repl.sess.pop(2)
+Passing in a large number like repl.sess.pop(999) would reset your session all the way until the start.
+
+Interrupting run-away execution with Ctrl-C
+@ while(true) ()
+... hangs ...
+^Ctrl-C
+Interrupted!
+
+@ interp.configureCompiler(_.settings.nowarnings.value = false)
+bash$ JAVA_OPTS="-Xmx1024m" amm
+
+#Scala Scripts
+bash$ amm MyScript.sc
+
+Multi-stage Scripts
+import $cp becomes interp.load.cp
+import $file becomes interp.load.module
+import $ivy becomes interp.load.ivy
+Additionally, there is an overloaded version of interp.load.cp which takes a Seq[Path] of classpath entries.
+val scalazVersion = "7.2.7"
+interp.load.ivy("org.scalaz" %% "scalaz-core" % scalazVersion)
+// This @ is necessary for Ammonite to process the `interp.load.ivy` 
+// before continuing
+@
+
+Script Arguments
+val x = 1
+@main
+def main(i: Int, s: String, path: os.Path = os.pwd) = {
+  s"Hello! ${s * i} ${path.last}."
+}
+$ amm Args.sc 3 Moo
+$ amm Args.sc --i 3 --s Moo
+@main
+def entrypoint(args: String*) = {
+  ...
+}
+
+amm MultiMain.sc mainA
+
+Multiple Main Methods
+@main
+def mainA() = {
+  println("Hello! " + x)
+}
+
+@doc("This explains what the function does")
+@main
+def functionB(i: Int @doc(
+                "how many times to repeat the string to make " +
+                "it very very long, more than it originally was"
+              ),
+              s: String @doc("the string to repeat"),
+              path: os.Path = os.pwd) = {
+  println(s"Hello! ${s * i} ${path.relativeTo(os.pwd)}.")
+}
+
+Bundled Libraries
+Requests-scala, uPickel
+
+Script Builtins
+Ammonite also provides some builtins you can use from scripts to inspect and manipulate the interpreter itself. Note that this is a much smaller set of functionality than the set of Builtins available to the REPL.
+
+Script Predef
+If you want code to be loaded before you run any script, you can place it in ~/.ammonite/predefScript.sc. This is distinct from the REPL pre-defined code which lives in ~/.ammonite/predef.sc. If you want code that is pre-initialized in both the REPL and in scripts, you can place it in ~/.ammonite/predefShared.sc.
+
+#!/usr/bin/env amm
+println("hello world")
+
+bash$ JAVA_OPTS="-Xmx1024m" amm path/to/script.sc
+$ amm -w/--watch -p/--predef foo.sc
+Within your scripts, you can also flag other files you want Ammonite to watch, via the interp.watch(p: Path) function.
+
+#Ammonite-Ops
+See Ops details: http://ammonite.io/#Ammonite-Ops
+
+Spawning Subprocesses
+@ %ls
+@ %%('ls)
+res0: CommandResult =
+%% on the other hand is intended for programmatic usage: rather than printing to stdout, it returns a CommandResult, which contains the standard output .out and standard error .err of the subprocess.
+%%('ls, "ops/src/test/resources/testdata")
+@ %`ssh-add`
+@ %git 'branch
+@ %%('git, 'branch)
+@ val stuff = List("readme.md", "build.sbt")
+stuff: List[String] = List("readme.md", "build.sbt")
+@ %('ls, '".gitignore", stuff)
+.gitignore	build.sbt	readme.md
+% calls subprocesses in a way that is compatible with a normal terminal. That means you can easily call things like %python to open up a Python terminal, %% does not do this.
+
+
+Traversable
+These extensions apply to any Traversable: Seqs, Lists, Arrays, and others.
+
+things | f is an alias for things map f
+things || f is an alias for things flatMap f
+things |? f is an alias for things filter f
+things |& f is an alias for things reduce f
+things |! f is an alias for things foreach f
+
+Pipeable
+thing |> f is an alias for f(thing)
+
+Callable
+f! thing is an alias for f(thing)
+
+#Ammonite-Shell
+See: http://ammonite.io/#Ammonite-Shell
