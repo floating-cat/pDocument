@@ -1,0 +1,84 @@
+https://wiki.archlinux.org/index.php/KRunner
+https://userbase.kde.org/Plasma/Krunner
+
+KRunner
+To open KRunner in Plasma, you can either right-click the desktop and press "run command", or you can use the default keybindings, Alt+Space or Alt+F2. In some workspaces such as a blank desktop, starting to type will automatically bring up KRunner.
+
+To set the Meta key as a kwriteconfig5 --file kwinrc --group ModifierOnlyShortcuts --key Meta "org.kde.krunner,/App,,display"
+
+Full list of windows with search by titles, Search by titles without full windows list. (See Wiki)
+
+Start and stop applications
+Press the down-arrow key for list of most recently used programs.
+
+Type in the keyword kill followed by a process name and KRunner will provide options to close the application (SIGTERM) or forcibly quit it (SIGKILL). KRunner will match partial process names to running processes.
+Note that the keyword kill can be changed in the "Terminate Applications" runner to avoid confusion with the shell command kill which accepts process IDs.
+
+Direct installation
+KRunner has been integrated with Plasma Software Center, Discover, will present you a list of applications, enabling you to proceed to direct installation.
+
+Issue (shell) commands
+When entering shell commands, KRunner will not accept partial commands or offer command auto completion.
+ls ~/Documents
+cp ~/Documents/myFile ~/myFile
+mplayer myMovie.mkv
+#ls
+man:/grep
+(Run in Terminal (Shift+Return))
+
+Browse websites
+You can simply start typing the URL of a website to open it in your default browser. You may even type in the name of a browser bookmark and KRunner will open it for you. If you have visited the website in the past, KRunner can fetch you results from your browser's history, too.
+myBookmark
+kde.org
+http://userbase.kde.org/
+Web Shortcuts:
+gg:KDE
+wp:krunner
+
+Open files, folders and devices
+file:/home/
+file:myMovie.mkv
+fish:you@server.com
+smb:myWindowsBox
+If you don't know the path to a file, simply type the name of the file. If the file is a recently opened document, KRunner will list it for you. If you have enabled "File Search" provided by Baloo daemon, you can also search your computer for the file by its indexed contents. KRunner will also open folders you've bookmarked in Dolphin (in your Places sidebar) if you type their name in. What's more, if you want to access devices on your system (both mounted and unmounted), you can do that, too. KRunner will even provide device-specific options.
+Home
+myFlashDrive
+
+Multitask with sessions, (windows, desktops and activities)
+Several KDE applications allow you to save and load sessions. KRunner allows you to launch these sessions. You can either type in the name of the application or directly type in the name of the session. Runners exist for opening sessions saved in Kate, Konqueror, Konsole, etc.
+
+Be on time
+You can get the current date or time by typing in the keywords date or time. Selecting the result will copy it to your clipboard so you can paste it elsewhere. The format of the date and time respects your system settings.
+date
+time
+time UTC
+time asia
+time china
+
+Calculator
+32*12 =
+= 32*12
+1 dollar
+30 JPY in RUB
+See more: https://userbase.kde.org/Plasma/Krunner#Calculator
+
+Go places
+
+Spell checking and special characters
+spell linux	Suggested words: Linux, lynx, ...
+#03b2	β
+#00b1	±
+
+Manage your computer
+keyboard	opens the Keyboard settings control module
+screen brightness 100
+sleep
+lock
+restart
+shutdown
+
+Usage
+Use Tab/Ctrl+j or Shift+Tab/Ctrl+k to navigate up and down results. Use arrow keys to move between options (if any) in a result. Use Enter (or left click) to select a result.
+
+Plasma/Browser Integration
+Media Controls, Send links via KDE Connect, Show downloads in and control them from Plasma’s notification area, Find browser tabs in the Run Command (Alt-Space) window

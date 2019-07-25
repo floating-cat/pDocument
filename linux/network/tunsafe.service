@@ -1,0 +1,13 @@
+[Unit]
+Description=TunSafe service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/tunsafe.start-stop start
+ExecStop=/usr/local/bin/tunsafe.start-stop stop
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sg vpn -c "$*"
