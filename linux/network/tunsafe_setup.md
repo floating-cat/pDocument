@@ -1,24 +1,29 @@
-WireGuard
+# Server
+## WireGuard
 sudo dnf install wireguard-dkms wireguard-tools
 sudo dnf copr enable jdoss/wireguaSrd
 mkdir wg
 umask 077
 wg genkey | tee privatekey | wg pubkey > publickey
-sudo route add -net 10.0.0.0/8 gw xxxx
 
-TunSafe
+## TunSafe
 sudo tunsafe genkey | tee privatekey | sudo tunsafe pubkey > publickey
 sudo tunsafe stop tun0
 sudo tunsafe start -d tunsafe.conf
 
-// ipset cpmmand version
+## Misc
+sudo firewall-cmd --add-rich-rule='rule family="ipv4" source address="192.168.2.0/24" masquerade' --permanent
+
+# Client
+## Add ipset
+### Ipset version
 val url = "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
 val chinaNetworks = requests.get(url).text.split('\n')
 %('sudo, 'ipset, 'create, 'china_networks, "hash:net")
 chinaNetworks foreach (x => %('sudo, 'ipset, 'add, 'china_networks, x))
 sudo bash -c "sudo ipset save > /etc/ipset/ipset"
 
-// Fedora/Firewalld version
+### Firewalld version
 val url = "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
 val chinaNetworks = requests.get(url).text.split('\n')
 val ipsetFileContent =
@@ -31,6 +36,7 @@ write(wd/"china_networks.xml", ipsetFileContent)
 
 sudo firewall-cmd --permanent --ipset=ipset --new-ipset-from-file=china_networks.xml
 
+## Misc
 sudo groupadd vpn
 getent group vpn
 
