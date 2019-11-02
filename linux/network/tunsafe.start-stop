@@ -13,7 +13,7 @@ start() {
     sudo ip route del 0.0.0.0/1 dev $vpn_interface
     sudo ip route del 128.0.0.0/1 dev $vpn_interface
 
-    sudo iptables -t mangle -A OUTPUT -m owner --gid-owner $vpn_gid -m set ! --match-set china_networks dst -m iprange ! --dst-range 10.0.0.0-10.255.255.255 -m iprange ! --dst-range 172.16.0.0-172.31.255.255 -m iprange ! --dst-range 192.168.0.0-192.168.255.255 -j MARK --set-mark 1
+    sudo iptables -t mangle -A OUTPUT -m owner --gid-owner $vpn_gid -m set ! --match-set london_networks dst -m iprange ! --dst-range 10.0.0.0-10.255.255.255 -m iprange ! --dst-range 172.16.0.0-172.31.255.255 -m iprange ! --dst-range 192.168.0.0-192.168.255.255 -j MARK --set-mark 1
     sudo ip rule add fwmark 1 table 100
     sudo ip route add table 100 default dev $vpn_interface
     sudo iptables -t nat -A POSTROUTING -o $vpn_interface -j MASQUERADE
@@ -28,7 +28,7 @@ start() {
 stop() {
     sudo tunsafe stop $vpn_interface
 
-    sudo iptables -t mangle -D OUTPUT -m owner --gid-owner $vpn_gid -m set ! --match-set china_networks dst -m iprange ! --dst-range 10.0.0.0-10.255.255.255 -m iprange ! --dst-range 172.16.0.0-172.31.255.255 -m iprange ! --dst-range 192.168.0.0-192.168.255.255 -j MARK --set-mark 1
+    sudo iptables -t mangle -D OUTPUT -m owner --gid-owner $vpn_gid -m set ! --match-set london_networks dst -m iprange ! --dst-range 10.0.0.0-10.255.255.255 -m iprange ! --dst-range 172.16.0.0-172.31.255.255 -m iprange ! --dst-range 192.168.0.0-192.168.255.255 -j MARK --set-mark 1
     sudo ip rule del fwmark 1 table 100
     sudo iptables -D POSTROUTING -t nat -o $vpn_interface -j MASQUERADE
     sudo iptables -t mangle -D POSTROUTING -o $vpn_interface -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $vpn_mss
